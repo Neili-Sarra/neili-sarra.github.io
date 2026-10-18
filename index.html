@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sarra Neili</title>
+<meta name="description" content="Portfolio of Sarra Neili, mechatronics engineering student at ENICarthage: embedded systems, IoT and AI projects.">
+<meta property="og:title" content="Sarra Neili, mechatronics engineering portfolio">
+<meta property="og:description" content="Embedded systems, IoT and AI projects: smart relay test bench, Smart Bin, STM32 weather station and more.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: a gridded engineering bench. Left-aligned hero pairs the name with a live coil-current trace;
+   then one row per project: the story on the left, a working instrument on a gridded bench on the right. Stacks on phones. */
+:root{
+  --paper:#EDF1F2; --sheet:#F7F9F9; --ink:#16212B; --ink-2:#4A5865; --rule:#C8D2D7; --grid:#DCE4E7;
+  --trace:#C3840B; --trace-ink:#7F5200; --signal:#0B7484;
+  --ok:#1D7F47; --warn:#9C640E; --crit:#BE3A31;
+  --display:"Saira Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+
+  /* Instrument skins carry their own ground, identical in both themes */
+  --d-bg:#0E1621; --d-panel:#152131; --d-line:#24344A; --d-ink:#E4ECF4; --d-ink-2:#8C9DB2;
+  --d-set:#2FBF71; --d-reset:#E5646E; --d-blue:#5A96F7; --d-amber:#F2B640; --d-crit:#FF7A70;
+  --lcd-bg:#A9C64B; --lcd-on:#1E2A0B; --lcd-off:#9BB842; --pcb:#17503D; --pcb-2:#1E6650; --pcb-ink:#E8F1EC; --pcb-ink-2:#A9C7BA;
+  --led-off:#5B2A27; --led-on:#FF4B3A;
+  --ph-frame:#20262C; --ph-alert-bg:#FDEBD3; --ph-alert-ink:#8A4B06; --ph-blue:#2F6FD6; --ph-orange:#E3861B; --fruit:#F2C94C; --apple:#D9443A; --ph-red:#D23B2F; --ph-red-ink:#B5281D; --ph-bg:#FFFFFF; --ph-ink:#1A1F24; --ph-ink-2:#5F6872; --ph-soft:#EEF2EF; --ph-line:#DDE3DF;
+  --bin:#2C7A52; --bin-soft:#DCEFE4; --safe:#3552B8; --safe-soft:#E4E9F8; --cam:#1C2329; --cam-2:#2A333B; --cam-3:#3A454F;
+  --flame:#FF8A2B; --flame-2:#FFD15C; --steel:#B9C3CC;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10171D; --sheet:#151E25; --ink:#E2E8EC; --ink-2:#98A6B1; --rule:#2A3640; --grid:#1C262E;
+    --trace:#F0B23E; --trace-ink:#F0B23E; --signal:#4DBFD1;
+    --ok:#4CC27D; --warn:#E3A541; --crit:#EF6B61;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10171D; --sheet:#151E25; --ink:#E2E8EC; --ink-2:#98A6B1; --rule:#2A3640; --grid:#1C262E;
+  --trace:#F0B23E; --trace-ink:#F0B23E; --signal:#4DBFD1;
+  --ok:#4CC27D; --warn:#E3A541; --crit:#EF6B61;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+button,select,input{font:inherit}
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px;border-radius:4px}
+.num{font-family:var(--display);font-variant-numeric:tabular-nums}
+
+/* Top bar */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:18px;flex-wrap:wrap}
+.top .mark{font-family:var(--display);font-weight:600;font-size:1.15rem;letter-spacing:.01em;text-decoration:none}
+.top nav{display:flex;gap:22px;flex-wrap:wrap}
+.top nav a{text-decoration:none;color:var(--ink-2)}
+.top nav a:hover{color:var(--ink)}
+
+/* Bench surface */
+.bench{background-color:var(--sheet);
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:24px 24px;background-position:-1px -1px;border:1px solid var(--rule);border-radius:6px;padding:clamp(14px,2.6vw,26px);min-width:0}
+.note{color:var(--ink-2);font-size:.82rem;margin-top:10px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:center;padding-block:28px 56px}
+.hero h1{font-size:clamp(4rem,11vw,8.6rem);font-weight:700;letter-spacing:-.012em;line-height:.88}
+.hero .role{font-family:var(--display);font-weight:500;font-size:clamp(1.25rem,2.3vw,1.6rem);color:var(--ink-2);margin-top:14px}
+.hero .lede{font-size:1.12rem;max-width:34rem;margin-top:22px}
+.hero .meta{color:var(--ink-2);max-width:34rem;margin-top:14px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.08)}
+.scope svg{display:block;width:100%;height:auto}
+.scope .axis{stroke:var(--ink-2);stroke-width:1}
+.scope .gl{stroke:var(--rule);stroke-width:1}
+.scope .tick{fill:var(--ink-2);font:12px var(--body)}
+.scope .atitle{fill:var(--ink-2);font:12px var(--body)}
+.scope .trace{fill:none;stroke:var(--trace);stroke-width:2.4;stroke-linejoin:round}
+.scope .pt{fill:var(--trace)}
+.scope .ann{fill:var(--ink);font:600 14px var(--display);letter-spacing:.01em}
+.scope .lead{stroke:var(--ink);stroke-width:1}
+.scope .pulse{stroke:var(--signal);stroke-width:1.2;stroke-dasharray:4 4}
+.scope .pulse-t{fill:var(--signal);font:600 14px var(--display)}
+.scope .beam{fill:var(--trace)}
+.scope .halo{fill:var(--trace);opacity:.25}
+.scope-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-top:12px;flex-wrap:wrap}
+.scope-foot p{color:var(--ink-2);font-size:.88rem;max-width:36rem;min-width:0;flex:1 1 260px}
+.linkbtn{background:none;border:1px solid var(--rule);color:var(--ink);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.88rem;white-space:nowrap}
+.linkbtn:hover{border-color:var(--ink-2)}
+
+/* Work index */
+.index{padding-block:8px 24px}
+.index h2,.sec-h{font-size:clamp(2rem,4vw,2.8rem)}
+.index ol{list-style:none;padding:0;margin:20px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));column-gap:40px}
+.index li a{display:grid;grid-template-columns:7.5rem minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:12px 0;border-top:1px solid var(--rule);text-decoration:none}
+.index li a:hover .t{text-decoration:underline;text-underline-offset:3px}
+.index .d{color:var(--ink-2);font-size:.9rem}
+.index .t{font-family:var(--display);font-size:1.3rem;font-weight:600;line-height:1.15}
+.index .k{color:var(--ink-2);font-size:.82rem}
+
+/* Project rows */
+.proj{display:grid;grid-template-columns:minmax(0,4.3fr) minmax(0,7.7fr);gap:clamp(24px,4vw,56px);padding-block:56px;border-top:1px solid var(--rule);align-items:start;scroll-margin-top:16px}
+.story{min-width:0;display:grid;gap:16px}
+.story .when{color:var(--ink-2);font-size:.92rem}
+.story h3{font-size:clamp(2rem,3.6vw,2.7rem)}
+.story .lede{font-size:1.06rem;max-width:36rem}
+.story ul{margin:0;padding-left:1.1rem;display:grid;gap:6px;max-width:36rem}
+.story .stack{color:var(--ink-2);font-size:.9rem;max-width:36rem}
+.story .stack b{color:var(--ink);font-weight:700}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin:4px 0 0}
+.results div{border-top:2px solid var(--trace);padding-top:8px;min-width:0}
+.results dt{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums}
+.results dd{margin:4px 0 0;color:var(--ink-2);font-size:.88rem}
+.tag{display:inline-block;font-size:.8rem;border:1px solid var(--rule);border-radius:3px;padding:1px 7px;color:var(--ink-2);margin-left:6px;vertical-align:2px}
+
+/* ===== Relay bench dashboard (dark instrument) ===== */
+.dash{background:var(--d-bg);color:var(--d-ink);border-radius:8px;padding:14px;font-size:.86rem;box-shadow:0 10px 30px -18px #000}
+.dash-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--d-ink-2);font-size:.8rem;padding:2px 4px 12px}
+.dash-top b{color:var(--d-ink);font-weight:700}
+.conn{display:inline-flex;align-items:center;gap:6px}
+.conn i{width:8px;height:8px;border-radius:50%;background:var(--d-set);display:inline-block}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dp{background:var(--d-panel);border:1px solid var(--d-line);border-radius:6px;padding:12px;min-width:0}
+.dp h4{font-family:var(--body);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--d-ink-2);font-weight:700;margin-bottom:10px}
+.dp.wide{grid-column:1/-1}
+.sbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sbtns button{border:0;border-radius:5px;padding:9px 0;font-weight:700;color:#08140D;cursor:pointer}
+.b-set{background:var(--d-set)}
+.b-reset{background:var(--d-reset)}
+.sbtns button:disabled{opacity:.45;cursor:not-allowed}
+.dsel{margin-top:10px;display:grid;gap:4px}
+.dsel label{color:var(--d-ink-2);font-size:.75rem}
+.dsel select{background:var(--d-bg);color:var(--d-ink);border:1px solid var(--d-line);border-radius:5px;padding:6px 8px;width:100%}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:10px 0 0}
+.kv dt{color:var(--d-ink-2);font-size:.75rem}
+.kv dd{margin:0;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.verdict{font-family:var(--display);font-weight:700;font-size:1.25rem;line-height:1.1}
+.verdict.ok{color:var(--d-set)}
+.verdict.bad{color:var(--d-crit)}
+.why{color:var(--d-ink-2);font-size:.78rem;margin-top:8px}
+.dmeta{color:var(--d-amber);font-size:.75rem;margin:-4px 0 6px}
+#r-chart{display:block;width:100%;height:auto}
+#r-chart .g{stroke:var(--d-line);stroke-width:1}
+#r-chart .tx{fill:var(--d-ink-2);font:11px var(--body)}
+#r-chart .c{fill:none;stroke-width:1.8;stroke-linejoin:round}
+#r-chart .end{stroke:var(--d-ink-2);stroke-dasharray:3 4}
+.auto-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.auto-row button{background:var(--d-blue);border:0;color:#06101F;font-weight:700;border-radius:5px;padding:8px 14px;cursor:pointer}
+.auto-row button.stop{background:var(--d-amber)}
+.bar{height:6px;border-radius:3px;background:var(--d-line);overflow:hidden;margin:10px 0 8px}
+.bar i{display:block;height:100%;width:0;background:var(--d-blue)}
+.auto-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;color:var(--d-ink-2);font-size:.75rem}
+.auto-stats b{display:block;color:var(--d-ink);font-size:.95rem;font-variant-numeric:tabular-nums}
+.auto-sum{margin-top:8px;font-size:.8rem;color:var(--d-set)}
+.auto-sum.bad{color:var(--d-crit)}
+
+/* ===== COFICAB tank HMI (page themed) ===== */
+.hmi{display:grid;grid-template-columns:minmax(120px,170px) minmax(0,1fr);gap:22px;align-items:start}
+.hmi-head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hmi-head h4{font-size:1.35rem}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.8rem;font-weight:700;border:1px solid currentColor}
+.chip i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.chip.ok{color:var(--ok)}.chip.warn{color:var(--warn)}.chip.idle{color:var(--ink-2)}
+#tank-svg{width:100%;height:auto;display:block}
+#tank-svg .shell{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+#tank-svg .water{fill:var(--signal);opacity:.75}
+#tank-svg .lim{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:4 3}
+#tank-svg .limt{fill:var(--ink-2);font:11px var(--body)}
+#tank-svg .pipe{fill:none;stroke:var(--ink);stroke-width:5}
+#tank-svg .pump{fill:var(--sheet);stroke:var(--ink);stroke-width:2}
+#tank-svg .pump.on{fill:var(--ok)}
+.readings{display:grid;gap:14px;min-width:0}
+.big{font-family:var(--display);font-weight:700;font-size:3.2rem;line-height:.95;font-variant-numeric:tabular-nums}
+.big small{font-size:1.3rem;font-weight:600;color:var(--ink-2)}
+.sub{color:var(--ink-2);font-size:.85rem}
+#spark{width:100%;height:auto;display:block}
+.hmi-ctl{display:flex;flex-wrap:wrap;gap:8px}
+.hmi-ctl button{border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:4px;padding:6px 12px;cursor:pointer;font-size:.85rem}
+.hmi-ctl button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#spark .line{fill:none;stroke:var(--signal);stroke-width:2}
+#spark .area{fill:var(--signal);opacity:.12}
+#spark .lim{stroke:var(--ink-2);stroke-dasharray:3 3;stroke-width:1}
+#spark .dot{fill:var(--signal)}
+#spark .lbl{fill:var(--ink-2);font:9px var(--body)}
+#spark .run{fill:var(--ok);opacity:.55}
+#spark .line{fill:none}
+#tank-svg .stem{stroke:var(--ink-2);stroke-width:1.5}
+#tank-svg .float{fill:var(--trace);stroke:var(--ink);stroke-width:1}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.84rem}
+.log li{display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:8px;border-top:1px solid var(--rule);padding-top:6px}
+.log time{color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* ===== Phones ===== */
+.phone-stage{display:flex;justify-content:center;align-items:flex-start;gap:24px;flex-wrap:wrap}
+.phone{width:min(312px,100%);background:var(--ph-frame);border-radius:38px;padding:10px;box-shadow:0 18px 40px -24px #000}
+.screen{background:var(--ph-bg);color:var(--ph-ink);border-radius:29px;overflow:hidden;font-size:.84rem;line-height:1.4}
+.sbar{display:flex;justify-content:space-between;padding:10px 22px 4px;font-size:.75rem;font-weight:700}
+.sbar .notch{width:84px;height:18px;border-radius:10px;background:var(--ph-frame)}
+.appbar{padding:6px 18px 10px}
+.appbar h5{font-family:var(--body);font-size:1.15rem;margin:0;font-weight:700}
+.appbar p{color:var(--ph-ink-2);font-size:.78rem}
+.pbody{padding:0 14px 14px;display:grid;gap:10px}
+.pcard{background:var(--ph-soft);border-radius:16px;padding:12px}
+.pcard h6{font-size:.78rem;color:var(--ph-ink-2);margin:0 0 8px;font-weight:700}
+.navbar{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ph-line);padding:8px 0 12px;font-size:.7rem;color:var(--ph-ink-2);text-align:center}
+.navbar span.on{font-weight:700}
+.navbar svg{display:block;margin:0 auto 2px;width:20px;height:20px}
+.pbtn{border:0;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;width:100%}
+.pbtn.text{background:transparent;padding:6px}
+.pbtn:disabled{opacity:.5;cursor:not-allowed}
+/* bin app */
+.bin-app .pbtn{background:var(--bin);color:var(--ph-bg)}
+.bin-app .pbtn.text{background:transparent;color:var(--bin)}
+.bin-app .navbar span.on{color:var(--bin)}
+.fill{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:center}
+.fill svg{width:96px;height:96px;display:block}
+.fill .ring-bg{fill:none;stroke:var(--ph-line);stroke-width:10}
+.fill .ring{fill:none;stroke:var(--bin);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .3s}
+.fill .ring.full{stroke:var(--crit)}
+.fill .pct{font:700 22px var(--body);fill:var(--ph-ink)}
+.fill b{font-size:1rem}
+.appbar.row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pill{display:inline-flex;align-items:center;font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;color:var(--ph-bg);margin-top:3px;transition:background .25s}
+.pill.standby{background:var(--ph-blue)}.pill.analyzing{background:var(--ph-orange)}.pill.open{background:var(--bin)}
+.gauges{display:grid;gap:10px}
+.gauge{display:grid;gap:4px}
+.gauge .row{display:flex;justify-content:space-between;font-size:.8rem}
+.gauge .row b{font-variant-numeric:tabular-nums}
+.gauge .track{height:10px;border-radius:5px;background:var(--ph-line);overflow:hidden;box-shadow:inset 0 0 0 1px transparent}
+.gauge .track i{display:block;height:100%;border-radius:5px;background:var(--bin);transition:width .4s}
+.gauge.full .track{box-shadow:inset 0 0 0 1px var(--ph-alert-ink)}
+.gauge.full .track i{background:var(--ph-red)}
+.gauge.full .row b{color:var(--ph-red-ink)}
+.alertb{background:var(--ph-alert-bg);color:var(--ph-alert-ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:.8rem}
+.det{display:grid;grid-template-columns:116px minmax(0,1fr);gap:10px;align-items:center}
+.det svg{width:116px;height:87px;border-radius:10px;display:block}
+.det b{display:block;font-size:.95rem}
+.det .conf{color:var(--bin);font-weight:700}
+.bars{display:grid;gap:6px}
+.bars div{display:grid;grid-template-columns:4.2rem minmax(0,1fr) 1.6rem;gap:8px;align-items:center;font-size:.76rem}
+.bars i{display:block;height:8px;border-radius:4px;background:var(--bin);transition:width .4s}
+.bars span:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+/* safety app */
+.safe-app .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--ph-soft);border-radius:999px;padding:3px;margin:0 14px 10px}
+.safe-app .seg button{border:0;background:transparent;border-radius:999px;padding:7px 0;font-weight:700;color:var(--ph-ink-2);cursor:pointer;font-size:.8rem}
+.safe-app .seg button[aria-selected="true"]{background:var(--ph-bg);color:var(--safe);box-shadow:0 1px 3px #0002}
+.safe-app .pbtn{background:var(--safe);color:var(--ph-bg)}
+.safe-app .navbar span.on{color:var(--safe)}
+.camv{position:relative;border-radius:14px;overflow:hidden}
+.camv svg{display:block;width:100%;height:auto}
+.camv .live{position:absolute;left:10px;top:8px;background:#000A;color:#fff;font-size:.68rem;font-weight:700;border-radius:4px;padding:2px 6px}
+.bbox{fill:none;stroke-width:2}
+.bbox-t{font:700 11px var(--body)}
+.al{display:grid;grid-template-columns:10px minmax(0,1fr);gap:10px;align-items:start;background:var(--ph-soft);border-radius:12px;padding:10px 12px}
+.al i{width:10px;height:10px;border-radius:50%;margin-top:4px}
+.al b{display:block}
+.al span{color:var(--ph-ink-2);font-size:.76rem}
+.care-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.care-list li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--ph-line);padding-bottom:8px}
+.care-list li:last-child{border-bottom:0;padding-bottom:0}
+.care-list span:last-child{font-weight:700;color:var(--safe)}
+.tip{background:var(--safe-soft);border-radius:14px;padding:12px}
+.tip b{display:block;color:var(--safe);margin-bottom:2px}
+
+/* ===== STM32 weather station ===== */
+.station{background:var(--pcb);color:var(--pcb-ink);border-radius:10px;padding:16px;display:grid;gap:14px;box-shadow:inset 0 0 0 2px var(--pcb-2)}
+.station-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--pcb-ink-2)}
+.station-head b{color:var(--pcb-ink);font-weight:700}
+.lcd-frame{background:#0C1A13;border-radius:6px;padding:10px;max-width:460px;width:100%}
+#lcd{display:block;width:100%;height:auto;border-radius:3px}
+.io{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.io-item{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--pcb-ink-2)}
+.led{width:14px;height:14px;border-radius:50%;background:var(--led-off);box-shadow:inset 0 -2px 3px #0006}
+.led.on{background:var(--led-on);box-shadow:0 0 12px 3px var(--led-on)}
+.buzz{width:22px;height:22px;border-radius:50%;background:#0D0F10;border:3px solid #2B2F33;position:relative}
+.buzz.on::after{content:"";position:absolute;inset:-9px;border:2px solid var(--pcb-ink-2);border-radius:50%;animation:ring .5s linear infinite}
+@keyframes ring{from{transform:scale(.7);opacity:1}to{transform:scale(1.25);opacity:0}}
+.usr{width:30px;height:30px;border-radius:50%;background:#1565C0;border:4px solid #2B2F33;cursor:pointer;box-shadow:0 2px 0 #0008}
+.usr:active{transform:translateY(1px);box-shadow:none}
+.ctl{display:grid;gap:6px;background:var(--pcb-2);border-radius:8px;padding:10px 12px}
+.ctl label{font-size:.8rem;display:flex;justify-content:space-between;gap:10px}
+.ctl input[type=range]{width:100%;accent-color:var(--d-amber)}
+.scale{display:flex;justify-content:space-between;font-size:.7rem;color:var(--pcb-ink-2)}
+.prio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:.75rem}
+.prio div{background:#0E3628;border-radius:6px;padding:8px}
+.prio b{display:block;color:var(--pcb-ink);font-size:.82rem}
+.prio span{color:var(--pcb-ink-2)}
+.irq{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.78rem;max-height:9.6rem;overflow:auto}
+.irq li{display:grid;grid-template-columns:3.6rem minmax(0,1fr);gap:8px;border-top:1px solid var(--pcb-2);padding-top:4px}
+.irq time{color:var(--pcb-ink-2);font-variant-numeric:tabular-nums}
+.irq .hi{color:var(--d-amber);font-weight:700}
+
+/* ===== Cooling jacket panel (page themed) ===== */
+.jk{display:grid;gap:16px}
+.jk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.jk-head h4{font-size:1.35rem}
+.jk-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.jk-cell{border-top:2px solid var(--rule);padding-top:8px;min-width:0}
+.jk-cell .v{font-family:var(--display);font-weight:700;font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.jk-cell .v small{font-size:1rem;color:var(--ink-2);font-weight:600}
+.jk-cell .l{color:var(--ink-2);font-size:.8rem}
+.lvl{display:flex;gap:4px;margin-top:6px}
+.lvl i{flex:1;height:10px;border-radius:2px;background:var(--rule)}
+.lvl i.on{background:var(--signal)}
+.jk-ctl{display:grid;gap:6px}
+.jk-ctl label{display:flex;justify-content:space-between;font-size:.88rem;gap:10px}
+.jk-ctl input{width:100%;accent-color:var(--signal)}
+#jk-chart{width:100%;height:auto;display:block}
+#jk-chart .g{stroke:var(--rule);stroke-width:1}
+#jk-chart .tx{fill:var(--ink-2);font:12px var(--body)}
+#jk-chart .t0{fill:none;stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:4 3}
+#jk-chart .t1{fill:none;stroke:var(--trace);stroke-width:2.2}
+#jk-chart .cl{fill:var(--signal);opacity:.22}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;background:var(--trace)}
+.legend i.d{background:none;border-top:2px dashed var(--ink-2);height:0}
+.legend i.b{height:10px;background:var(--signal);opacity:.35}
+
+/* Skills / background / contact */
+.sec{padding-block:56px;border-top:1px solid var(--rule)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:28px 40px;margin-top:26px}
+.cols h4{font-size:1.3rem;margin-bottom:8px}
+.cols p,.cols li{color:var(--ink-2)}
+.cols ul{margin:0;padding-left:1.1rem;display:grid;gap:4px}
+.bg-list{display:grid;gap:18px;margin-top:26px}
+.bg-item{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:16px;border-top:1px solid var(--rule);padding-top:14px}
+.bg-item .d{color:var(--ink-2);font-size:.9rem}
+.bg-item b{font-family:var(--display);font-size:1.3rem;font-weight:600;display:block;line-height:1.15}
+.bg-item p{color:var(--ink-2)}
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:end}
+.mailbox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.mailbox code{font-family:var(--display);font-size:clamp(1.4rem,3.4vw,2.2rem);font-weight:600;user-select:all;word-break:break-all}
+footer{padding-block:28px 40px;color:var(--ink-2);font-size:.85rem;border-top:1px solid var(--rule)}
+
+@media (max-width: 980px){
+  .hero,.proj,.contact{grid-template-columns:minmax(0,1fr)}
+  .proj{padding-block:44px}
+}
+@media (max-width: 640px){
+  .dgrid{grid-template-columns:minmax(0,1fr)}
+  .hmi{grid-template-columns:minmax(0,110px) minmax(0,1fr);gap:14px}
+  .results{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .index li a{grid-template-columns:6rem minmax(0,1fr)}
+  .index .k{display:none}
+  .bg-item{grid-template-columns:minmax(0,1fr);gap:4px}
+  .prio{grid-template-columns:minmax(0,1fr)}
+  .jk-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width: 640px){
+  .scope .tick,.scope .atitle{font-size:20px}
+  .scope .ann,.scope .pulse-t{font-size:22px}
+  #r-chart .tx{font-size:21px}
+  #jk-chart .tx{font-size:19px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <a class="mark" href="#top">Sarra Neili</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#background">Background</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div>
+      <h1>Sarra<br>Neili</h1>
+      <p class="role">Mechatronics engineering student, ENICarthage</p>
+      <p class="lede">I build embedded systems that measure a machine, judge its health and show the result to the people who run it: firmware on ESP32 and STM32, machine learning for fault detection, and the dashboards and apps that go with them.</p>
+      <p class="meta">Final year, Tunis. Looking for a 4 to 6 month end-of-studies internship (PFE) in 2027 in IoT, autonomous systems or predictive maintenance. Open to relocation.</p>
+      <div class="cta">
+        <a class="btn" href="#work">See the work</a>
+        <a class="btn ghost" href="#contact">Contact me</a>
+      </div>
+    </div>
+    <figure class="bench scope" style="margin:0">
+      <svg id="hero-scope" viewBox="0 0 640 340" role="img" aria-label="Coil current of a Gruner 715 relay during a 20 millisecond SET pulse: rises to about 35 milliamps, dips to 26 milliamps near 9 milliseconds when the armature moves, then settles at 41 milliamps until the pulse ends at 20 milliseconds."></svg>
+      <div class="scope-foot">
+        <p>Coil current of a Gruner 715 bistable relay during one 20 ms SET pulse, sampled every 0.25 ms by my test bench (median of 10 measured cycles, redrawn). The dip is the armature moving: its timing and depth tell the model if the relay is healthy.</p>
+        <button class="linkbtn" id="replay" type="button">Replay pulse</button>
+      </div>
+    </figure>
+  </section>
+
+  <section class="index" id="work" aria-labelledby="work-h">
+    <h2 id="work-h">Work, newest first</h2>
+    <ol>
+      <li><a href="#relay"><span class="d">Summer 2026</span><span class="t">Smart relay test bench</span><span class="k">Internship</span></a></li>
+      <li><a href="#weather"><span class="d">Apr. 2026</span><span class="t">Embedded weather station</span><span class="k">Project</span></a></li>
+      <li><a href="#bin"><span class="d">Mar. to May 2026</span><span class="t">Smart Bin</span><span class="k">PFA</span></a></li>
+      <li><a href="#safety"><span class="d">Jan. 2026</span><span class="t">Child and infant safety app</span><span class="k">Project</span></a></li>
+      <li><a href="#jacket"><span class="d">Oct. 2025</span><span class="t">Wearable cooling jacket</span><span class="k">Project</span></a></li>
+      <li><a href="#tank"><span class="d">Jul. 2025</span><span class="t">Cooling water monitor</span><span class="k">Internship</span></a></li>
+    </ol>
+  </section>
+
+  <!-- ============ 1. RELAY TEST BENCH ============ -->
+  <article class="proj" id="relay">
+    <div class="story">
+      <p class="when">Summer 2026, internship at GRUNER Tunisie, test laboratory</p>
+      <h3>Smart relay test bench</h3>
+      <p class="lede">A low-cost ESP32 bench that pulses a Gruner 715 bistable relay, records its coil current every 0.25 ms and tells the lab whether the relay is healthy, faulty or wearing out.</p>
+      <dl class="results">
+        <div><dt>96.4%</dt><dd>fault classification accuracy on 1,600 simulated test cycles</dd></div>
+        <div><dt>3 of 3</dt><dd>defective relays from the lab correctly diagnosed</dd></div>
+        <div><dt>10,000</dt><dd>cycles in the endurance run, no drift on any indicator</dd></div>
+        <div><dt>120 TND</dt><dd>approximate cost of the parts</dd></div>
+      </dl>
+      <ul>
+        <li>C++ firmware with FreeRTOS: 100-point capture at 4 kHz, 0.1 mA resolution, on two I2C buses.</li>
+        <li>Physics-based digital twin, calibrated on bench data, generated 8,000 labeled cycles.</li>
+        <li>Random forest diagnosis, LOF anomaly detection and remaining useful life estimate, served live over WebSocket.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> ESP32, C++, FreeRTOS, PlatformIO, TB6612FNG, INA219, DHT22, WebSocket, JavaScript, Python, scikit-learn, SciPy</p>
+    </div>
+    <div class="bench">
+      <div class="dash" id="relay-dash">
+        <div class="dash-top"><span><b>Relay test bench</b>, Gruner 715, winding 280, 12 V</span><span class="conn"><i></i>esp32-relay.local</span></div>
+        <div class="dgrid">
+          <section class="dp">
+            <h4>Command</h4>
+            <div class="sbtns"><button class="b-set" id="r-set" type="button">SET</button><button class="b-reset" id="r-reset" type="button">RESET</button></div>
+            <div class="dsel">
+              <label for="r-kind">Relay on the bench</label>
+              <select id="r-kind">
+                <option value="healthy">Healthy relay</option>
+                <option value="shorted">Shorted turns</option>
+                <option value="jammed">Jammed mechanics</option>
+                <option value="welded">Welded contact</option>
+                <option value="open">Open coil</option>
+              </select>
+            </div>
+          </section>
+          <section class="dp">
+            <h4>Last cycle</h4>
+            <dl class="kv">
+              <dt>Final coil current</dt><dd id="r-final">41.0 mA</dd>
+              <dt>Dip (armature)</dt><dd id="r-dip">9.00 ms</dd>
+              <dt>Contact</dt><dd id="r-contact">closed</dd>
+              <dt>Output current</dt><dd id="r-out">69.8 mA</dd>
+              <dt>Supply, ambient</dt><dd>12.08 V, 27.1 °C</dd>
+            </dl>
+          </section>
+          <section class="dp">
+            <h4>AI diagnosis, PC</h4>
+            <p class="verdict ok" id="r-verdict">Normal</p>
+            <dl class="kv">
+              <dt>Random forest</dt><dd id="r-rf">Normal (78%)</dd>
+              <dt>Anomaly detector</dt><dd id="r-lof">normal</dd>
+            </dl>
+            <p class="why" id="r-why">All 11 indicators inside the normal range.</p>
+          </section>
+          <section class="dp wide">
+            <h4>Coil current, last cycle</h4>
+            <p class="dmeta" id="r-meta">SET, 100 points, one every 0.25 ms, 0 late points</p>
+            <svg id="r-chart" viewBox="0 0 600 210" role="img" aria-label="Coil current of the last cycle"></svg>
+          </section>
+          <section class="dp wide">
+            <h4>Automatic cycle test</h4>
+            <div class="auto-row">
+              <button type="button" id="r-run">Run 1,000 cycles</button>
+              <span class="sub" style="color:var(--d-ink-2)">About 25 min on the real bench, sped up here.</span>
+            </div>
+            <div class="bar"><i id="r-bar"></i></div>
+            <div class="auto-stats">
+              <div>Progress<b id="r-prog">0 / 1,000</b></div>
+              <div>Relay operations<b id="r-ops">0</b></div>
+              <div>Anomalies<b id="r-anom">0</b></div>
+            </div>
+            <p class="auto-sum" id="r-sum" hidden></p>
+          </section>
+        </div>
+      </div>
+      <p class="note">Recreated from my bench dashboard. The fault curves follow the signatures measured on real defective relays at GRUNER.</p>
+    </div>
+  </article>
+
+  <!-- ============ 2. WEATHER STATION ============ -->
+  <article class="proj" id="weather">
+    <div class="story">
+      <p class="when">Apr. 2026, embedded systems project, ENICarthage</p>
+      <h3>Embedded weather station</h3>
+      <p class="lede">STM32 firmware for a small weather station: temperature and pressure from a BMP180, a light alarm on an LDR and a 16x2 LCD, all built around two prioritized interrupts. Written in C with the STM32 HAL and simulated online.</p>
+      <ul>
+        <li>ADC analog watchdog on the LDR, high priority: crossing the threshold turns on the LED and buzzer at once.</li>
+        <li>Push button on EXTI, medium priority: starts a 60 s measurement campaign sampled at 1 Hz by TIM3.</li>
+        <li>BMP180 and LCD share the I2C bus; the LCD always shows the latest reading.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> STM32 Nucleo-C031C6, C, STM32 HAL, STM32CubeIDE, NVIC, EXTI, ADC, TIM3, I2C, BMP180, LCD 1602</p>
+    </div>
+    <div class="bench">
+      <div class="station">
+        <div class="station-head"><span><b>Nucleo-C031C6</b> weather station</span><span>Try it: drag the light, press the blue button</span></div>
+        <div class="lcd-frame"><canvas id="lcd" width="792" height="172" aria-label="LCD 1602 display"></canvas></div>
+        <div class="io">
+          <div class="io-item"><span class="led" id="st-led"></span>Alarm LED</div>
+          <div class="io-item"><span class="buzz" id="st-buzz"></span>Buzzer</div>
+          <div class="io-item"><button class="usr" id="st-btn" type="button" aria-label="User button, starts a 60 second measurement"></button>User button (EXTI)</div>
+        </div>
+        <div class="ctl">
+          <label for="st-light"><span>Light on the LDR, ADC value</span><b class="num" id="st-light-v">1840</b></label>
+          <input type="range" id="st-light" min="0" max="4095" step="5" value="1840">
+          <div class="scale"><span>0</span><span>alarm above 2500</span><span>4095</span></div>
+        </div>
+        <div class="prio">
+          <div><b>ADC watchdog</b><span>Priority 1, high</span></div>
+          <div><b>Button EXTI</b><span>Priority 2, medium</span></div>
+          <div><b>TIM3, 1 Hz</b><span>Priority 3, low</span></div>
+        </div>
+        <ul class="irq" id="st-log" aria-live="polite"></ul>
+      </div>
+      <p class="note">Same logic as the simulated firmware, with the thresholds and priorities of the project spec. The campaign runs 5 times faster here.</p>
+    </div>
+  </article>
+
+  <!-- ============ 3. WASTE BIN ============ -->
+  <article class="proj" id="bin">
+    <div class="story">
+      <p class="when">Mar. to May 2026, end-of-year project (PFA), team of 2, ENICarthage</p>
+      <h3>Smart Bin</h3>
+      <p class="lede">A bin that sorts waste on its own. A camera and a YOLOv8 model classify each item as recyclable, organic or non-recyclable, a stepper motor turns a tilted tray to the right compartment, and a Flutter app shows how full each compartment is.</p>
+      <ul>
+        <li>YOLOv8 trained with transfer learning on Kaggle GPUs, on two merged datasets (TACO and Household Trash) whose 48 classes we remapped into 3 categories.</li>
+        <li>An IR sensor starts each cycle; a finite-state machine drives the camera, the stepper motor, LEDs and buzzer, and three ultrasonic sensors measure each compartment.</li>
+        <li>Raspberry Pi 4 architecture designed down to the GPIO map and level shifters, then validated on a PC and Arduino prototype over UART that sorts in under one second.</li>
+        <li>Flutter app reads a Flask REST API every 2 s: fill gauges, an alert above 80% and the last detection with its confidence.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> YOLOv8, Python, TensorFlow Lite, Raspberry Pi 4, Arduino, UART, Flask, Flutter, HC-SR04, 28BYJ-48 stepper, SolidWorks, CATIA</p>
+    </div>
+    <div class="bench">
+      <div class="phone-stage">
+        <div class="phone">
+          <div class="screen bin-app">
+            <div class="sbar"><span>9:41</span><span class="notch"></span><span>87%</span></div>
+            <div class="appbar row"><div><h5>Smart Bin</h5><p id="b-tray">Tray at rest, 0°</p></div><span class="pill standby" id="b-status">Standby</span></div>
+            <div class="pbody">
+              <div class="alertb" id="b-alert">Non-recyclable is 85% full. Empty it soon.</div>
+              <div class="pcard">
+                <h6>Compartments</h6>
+                <div class="gauges" id="b-gauges"></div>
+              </div>
+              <div class="pcard">
+                <h6>Last item</h6>
+                <div class="det">
+                  <svg id="b-cam" viewBox="0 0 120 90" aria-label="Camera frame with the detected item"></svg>
+                  <div><b id="b-cls">Recyclable</b><span>Confidence </span><span class="conf" id="b-conf">87.5%</span><br><span style="color:var(--ph-ink-2)" id="b-step">Compartment 1, 256 steps</span></div>
+                </div>
+              </div>
+              <div class="pcard">
+                <h6>Sorted this week</h6>
+                <div class="bars" id="b-bars"></div>
+              </div>
+              <button class="pbtn" type="button" id="b-next">Drop an item</button>
+              <button class="pbtn text" type="button" id="b-empty">Empty full compartments</button>
+            </div>
+            <div class="navbar">
+              <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/></svg>Dashboard</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/></svg>Statistics</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Settings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Recreation of our Flutter app screen, with the values of the report's example API response. Tap "Drop an item" to run a sorting cycle.</p>
+    </div>
+  </article>
+
+  <!-- ============ 4. SAFETY APP ============ -->
+  <article class="proj" id="safety">
+    <div class="story">
+      <p class="when">Jan. 2026, personal project</p>
+      <h3>Child and infant safety app</h3>
+      <p class="lede">A camera watches the room, computer vision on an ESP32 spots fire and sharp objects near a child, and parents get an alert on their phone. A second part of the app helps new mothers with daily baby care.</p>
+      <ul>
+        <li>Real-time hazard detection on the edge, with low-latency alerts to the mobile app.</li>
+        <li>Baby care companion: daily guidance and direct contact with a doctor, in the same app.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> ESP32, computer vision, mobile app</p>
+    </div>
+    <div class="bench">
+      <div class="phone-stage">
+        <div class="phone">
+          <div class="screen safe-app">
+            <div class="sbar"><span>18:42</span><span class="notch"></span><span>64%</span></div>
+            <div class="appbar"><h5>Child Safety</h5><p>Kitchen camera, connected</p></div>
+            <div class="seg" role="tablist" aria-label="App sections">
+              <button type="button" role="tab" id="s-tab1" aria-selected="true" aria-controls="s-p1">Safety</button>
+              <button type="button" role="tab" id="s-tab2" aria-selected="false" aria-controls="s-p2">Baby care</button>
+            </div>
+            <div class="pbody" id="s-p1" role="tabpanel" aria-labelledby="s-tab1">
+              <div class="camv">
+                <svg id="s-cam" viewBox="0 0 280 180" aria-label="Kitchen camera view with detected hazards"></svg>
+                <span class="live">LIVE</span>
+              </div>
+              <div class="al"><i style="background:var(--crit)"></i><div><b>Fire near the child</b><span>Stove, detected at 18:42, confidence 91%</span></div></div>
+              <div class="al" id="s-al2"><i style="background:var(--d-amber)"></i><div><b>Knife within reach</b><span>Counter edge, detected at 18:42, confidence 87%</span></div></div>
+              <button class="pbtn" type="button" id="s-scan">Scan the room again</button>
+            </div>
+            <div class="pbody" id="s-p2" role="tabpanel" aria-labelledby="s-tab2" hidden>
+              <div class="tip"><b>Tip of the day</b>Keep hot drinks and cables out of reach once your baby starts to roll over.</div>
+              <div class="pcard">
+                <h6>Today</h6>
+                <ul class="care-list">
+                  <li><span>Feeds logged</span><span>6</span></li>
+                  <li><span>Sleep</span><span>9 h 40</span></li>
+                  <li><span>Diaper changes</span><span>5</span></li>
+                  <li><span>Next check-up</span><span>Thu 10:00</span></li>
+                </ul>
+              </div>
+              <button class="pbtn" type="button" id="s-doc">Message the doctor</button>
+              <p id="s-doc-msg" style="color:var(--ph-ink-2);font-size:.76rem;text-align:center" hidden>Chat with the doctor opens here in the app.</p>
+            </div>
+            <div class="navbar">
+              <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Home</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg>Cameras</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">App screen recreation with example data.</p>
+    </div>
+  </article>
+
+  <!-- ============ 5. COOLING JACKET ============ -->
+  <article class="proj" id="jacket">
+    <div class="story">
+      <p class="when">Oct. 2025, IEEE WIE ACT 2024–2025 competition, participant</p>
+      <h3>Wearable cooling jacket</h3>
+      <p class="lede">A jacket for Tunisian women working in agricultural fields. An ESP32 reads the temperature under the jacket with a DHT11 and raises the cooling as heat stress builds up.</p>
+      <ul>
+        <li>Led the embedded design: sensing, control thresholds and cooling regulation in real time.</li>
+        <li>Runs on its own in the field, with no phone or network needed.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> ESP32, DHT11, C++</p>
+    </div>
+    <div class="bench">
+      <div class="jk">
+        <div class="jk-head"><h4>Shift monitor</h4><span class="chip ok" id="j-chip"><i></i>Auto cooling</span></div>
+        <div class="jk-row">
+          <div class="jk-cell"><div class="v" id="j-t">33.9<small> °C</small></div><div class="l">Under the jacket, after cooling</div></div>
+          <div class="jk-cell"><div class="v" id="j-h">54<small> %</small></div><div class="l">Humidity, DHT11</div></div>
+          <div class="jk-cell"><div class="v" id="j-l">Medium</div><div class="l">Cooling level</div><div class="lvl" id="j-lvl"><i class="on"></i><i class="on"></i><i></i></div></div>
+        </div>
+        <div class="jk-ctl">
+          <label for="j-amb"><span>Air temperature in the field</span><b class="num" id="j-amb-v">38 °C</b></label>
+          <input type="range" id="j-amb" min="22" max="46" step="1" value="38">
+        </div>
+        <svg id="jk-chart" viewBox="0 0 560 200" role="img" aria-label="Temperature under the jacket over a morning shift, with and without cooling"></svg>
+        <div class="legend"><span><i></i>With cooling</span><span><i class="d"></i>Without cooling</span><span><i class="b"></i>Cooling level</span></div>
+      </div>
+      <p class="note">Interface concept with example data. The thresholds are illustrative.</p>
+    </div>
+  </article>
+
+  <!-- ============ 6. COFICAB TANK ============ -->
+  <article class="proj" id="tank">
+    <div class="story">
+      <p class="when">Jul. 2025, internship at COFICAB Tunisia</p>
+      <h3>Cooling water monitor</h3>
+      <p class="lede">Real-time ESP32 firmware for a cable cooling system. A float sensor reports the water level, a 5 V relay module drives the pump, and a web dashboard linked over MQTT lets operators follow the level, get alerts and start or stop the pump remotely.</p>
+      <ul>
+        <li>Automatic pump control from the float sensor replaced manual threshold checks and made the system more reliable.</li>
+        <li>The ESP32 and the dashboard exchange data over MQTT: live level, threshold alerts and a history chart.</li>
+        <li>Operators can take over from the website at any time and switch the pump on or off remotely.</li>
+      </ul>
+      <p class="stack"><b>Built with</b> ESP32, float level sensor, 5 V relay module, MQTT, Wi-Fi, web dashboard</p>
+    </div>
+    <div class="bench">
+      <div class="hmi">
+        <div class="hmi-head"><h4>Cable cooling tank</h4><span style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip ok"><i></i>MQTT connected</span><span class="chip idle" id="t-pump-chip"><i></i>Pump off</span></span></div>
+        <svg id="tank-svg" viewBox="0 0 140 220" role="img" aria-label="Tank with float sensor and pump">
+          <path class="pipe" d="M50 192 v16 h78 v-184 h-38"></path>
+          <rect class="shell" x="10" y="12" width="80" height="180" rx="6"></rect>
+          <rect class="water" id="t-water" x="12" y="80" width="76" height="110" rx="4"></rect>
+          <line class="lim" x1="10" x2="92" y1="66.8" y2="66.8"></line>
+          <text class="limt" x="95" y="70">float</text>
+          <line class="stem" id="t-stem" x1="13" y1="66.8" x2="44" y2="66.8"></line>
+          <rect class="float" id="t-float" x="40" y="61" width="18" height="11" rx="5.5"></rect>
+          <circle class="pump" id="t-pumpc" cx="128" cy="150" r="10"></circle>
+        </svg>
+        <div class="readings">
+          <div><div class="big" id="t-level">Level OK</div><p class="sub">Float switch at the working level. In automatic mode, the pump refills the tank when the float drops.</p></div>
+          <div><svg id="spark" viewBox="0 0 260 64" aria-label="Float state and pump runs over the last 48 minutes"></svg><p class="sub">Last 48 minutes: float state and pump runs</p></div>
+          <div class="hmi-ctl" role="group" aria-label="Pump control">
+            <button type="button" id="t-auto" aria-pressed="true">Automatic</button>
+            <button type="button" id="t-on" aria-pressed="false">Start pump</button>
+            <button type="button" id="t-off" aria-pressed="false">Stop pump</button>
+          </div>
+          <ul class="log" id="t-log" aria-live="polite"></ul>
+        </div>
+      </div>
+      <p class="note">Interface recreation with example data. Try the remote pump buttons.</p>
+    </div>
+  </article>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="sec" id="skills" aria-labelledby="sk-h">
+    <h2 class="sec-h" id="sk-h">Skills</h2>
+    <div class="cols">
+      <div><h4>Embedded and IoT</h4><p>ESP32, STM32 (HAL, CubeIDE), Raspberry Pi, Arduino, FreeRTOS, PlatformIO, interrupts and timers, MQTT, WebSocket, I2C, UART, SPI, Wi-Fi</p></div>
+      <div><h4>Machine learning and AI</h4><p>scikit-learn, random forest, anomaly detection, predictive maintenance, remaining useful life, digital twin, generative AI</p></div>
+      <div><h4>Computer vision</h4><p>OpenCV, YOLO, object detection, TensorFlow Lite, dataset preparation, Google Colab</p></div>
+      <div><h4>Software</h4><p>Python, C/C++, Dart and Flutter, Flask, JavaScript, HTML/CSS, VHDL, MATLAB, Git and GitHub</p></div>
+      <div><h4>Mechanical</h4><p>SolidWorks, CATIA: part design and assembly</p></div>
+      <div><h4>Languages</h4><p>Arabic and French, native. English, fluent.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ BACKGROUND ============ -->
+  <section class="sec" id="background" aria-labelledby="bg-h">
+    <h2 class="sec-h" id="bg-h">Background</h2>
+    <div class="bg-list">
+      <div class="bg-item"><span class="d">Sep. 2024 to 2027</span><div><b>École Nationale d'Ingénieurs de Carthage (ENICarthage)</b><p>Engineering degree in mechatronics, final year. Embedded systems, control theory, electronics, signal processing, VHDL, mechanical design.</p></div></div>
+      <div class="bg-item"><span class="d">Sep. 2022 to Jun. 2024</span><div><b>IPEI Manar, preparatory classes (PC)</b><p>Two intensive years of mathematics and physics, then admission through the national competitive exam.</p></div></div>
+      <div class="bg-item"><span class="d">Aug. 2026</span><div><b>GenAI in Action, GOMYCODE</b><p>Certificate in generative AI from a state-approved training center.</p></div></div>
+      <div class="bg-item"><span class="d">2024 to 2025</span><div><b>Awards and activities</b><p>Best Poster Award 2024/2025. Active member of the IEEE student branch, participant in IEEE WIE ACT 2024–2025.</p></div></div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="sec" id="contact" aria-labelledby="ct-h">
+    <div class="contact">
+      <div>
+        <h2 class="sec-h" id="ct-h">Let's talk about your 2027 PFE</h2>
+        <p class="sub" style="margin-top:12px;font-size:1rem;max-width:34rem">I am looking for a subject in IoT, embedded AI or predictive maintenance. Based in Tunis, open to relocation.</p>
+      </div>
+      <div>
+        <div class="mailbox"><code id="mail">neylysarra@gmail.com</code><button class="linkbtn" type="button" id="copy">Copy email</button></div>
+        <p class="sub" id="copy-msg" aria-live="polite" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Sarra Neili, 2026</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var NS = "http://www.w3.org/2000/svg";
+var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function el(tag, attrs, parent){ var n=document.createElementNS(NS,tag); for(var k in attrs){ n.setAttribute(k, attrs[k]); } if(parent) parent.appendChild(n); return n; }
+function txt(tag, attrs, s, parent){ var n=el(tag, attrs, parent); n.textContent=s; return n; }
+function interp(kp, t){ if(t<=kp[0][0]) return kp[0][1]; for(var i=1;i<kp.length;i++){ if(t<=kp[i][0]){ var a=kp[i-1], b=kp[i]; return a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0]); } } return kp[kp.length-1][1]; }
+function fmt(n,d){ return n.toFixed(d); }
+function noise(s){ return (Math.random()+Math.random()+Math.random()-1.5)*s; }
+
+/* ---------- Coil current shapes (mA vs ms) ---------- */
+var KP = {
+  healthy:[[0,12],[0.25,19],[0.5,21.5],[1,23.5],[2,26],[3,29],[4,31.5],[5,33],[6,34.5],[7,35],[8,34],[8.5,30],[8.75,26],[9,31],[9.5,33],[10,32],[10.5,34],[11,37],[12,39.5],[13,40.5],[15,40.8],[17,41],[19.75,41],[20,39],[20.25,4],[20.5,0.8],[21,0],[25,0]],
+  healthyReset:[[0,9],[0.25,18],[0.5,22],[1,23],[2,27],[3,29.5],[4,32],[5,33.5],[5.75,35],[6,43],[6.25,44.5],[6.5,37],[7,35],[9,35.5],[10.5,34],[11,32],[11.3,30.5],[11.75,33],[12.5,36],[14,39],[16,40.5],[19.75,40.7],[20,38],[20.25,3],[20.5,0.5],[21,0],[25,0]],
+  shorted:[[0,18],[0.25,29],[0.5,33],[1,37],[2,42],[3,47],[4,51],[5,53],[5.75,51],[6,46],[6.25,41],[6.5,48],[7,51],[8,55],[9,59],[10,61.5],[12,63],[19.75,63.6],[20,60],[20.25,6],[20.5,1],[21,0],[25,0]],
+  jammed:[[0,12],[0.25,19],[0.5,21.5],[1,23.5],[2,26],[3,29],[4,31.5],[5,33],[6,34.5],[8,35.5],[10,36],[12,36.2],[14,36.4],[15.5,36],[16,32],[16.5,28],[16.75,33],[17.25,35],[18,37.5],[19,39],[19.75,39.8],[20,38],[20.25,4],[20.5,0.8],[21,0],[25,0]],
+  welded:[[0,12],[0.25,19],[0.5,21.5],[1,23.5],[2,26],[3,29],[4,31.5],[5,33],[6,34.8],[8,37],[10,38.8],[12,40],[15,40.8],[19.75,41],[20,39],[20.25,4],[20.5,0.8],[21,0],[25,0]],
+  open:[[0,0],[25,0]]
+};
+
+/* ---------- Hero scope ---------- */
+var hs = document.getElementById("hero-scope");
+var H = {W:640,H:340,L:54,R:22,T:20,B:46};
+function hx(t){ return H.L + t/25*(H.W-H.L-H.R); }
+function hy(v){ return H.T + (1-v/50)*(H.H-H.T-H.B); }
+(function drawHero(){
+  var i;
+  for(i=0;i<=25;i+=5){ el("line",{"class":"gl",x1:hx(i),x2:hx(i),y1:hy(0),y2:hy(50)},hs); txt("text",{"class":"tick",x:hx(i),y:hy(0)+18,"text-anchor":"middle"},String(i),hs); }
+  for(i=0;i<=50;i+=10){ el("line",{"class":"gl",x1:hx(0),x2:hx(25),y1:hy(i),y2:hy(i)},hs); txt("text",{"class":"tick",x:hx(0)-8,y:hy(i)+4,"text-anchor":"end"},String(i),hs); }
+  el("line",{"class":"axis",x1:hx(0),x2:hx(25),y1:hy(0),y2:hy(0)},hs);
+  el("line",{"class":"axis",x1:hx(0),x2:hx(0),y1:hy(0),y2:hy(50)},hs);
+  txt("text",{"class":"atitle",x:hx(25),y:H.H-6,"text-anchor":"end"},"time (ms)",hs);
+  txt("text",{"class":"atitle",x:12,y:hy(50)-6},"mA",hs);
+  el("line",{"class":"pulse",x1:hx(20),x2:hx(20),y1:hy(0),y2:hy(48)},hs);
+  txt("text",{"class":"pulse-t",x:hx(19.6),y:hy(46.5),"text-anchor":"end"},"pulse ends at 20 ms",hs);
+  var pts=[], d="";
+  for(i=0;i<100;i++){ var t=i*0.25; var v=interp(KP.healthy,t); pts.push([hx(t),hy(v)]); d+=(i?"L":"M")+hx(t).toFixed(1)+" "+hy(v).toFixed(1); }
+  el("path",{"class":"trace",d:d},hs);
+  for(i=0;i<pts.length;i++){ el("circle",{"class":"pt",cx:pts[i][0].toFixed(1),cy:pts[i][1].toFixed(1),r:1.7},hs); }
+  el("line",{"class":"lead",x1:hx(8.8),y1:hy(25.3),x2:hx(9.7),y2:hy(21.8)},hs);
+  txt("text",{"class":"ann",x:hx(9.85),y:hy(20.6)},"dip at 9 ms: the armature moves",hs);
+  txt("text",{"class":"ann",x:hx(11.4),y:hy(33.4)},"41 mA, armature seated",hs);
+  var halo=el("circle",{"class":"halo",cx:pts[99][0],cy:pts[99][1],r:9},hs);
+  var beam=el("circle",{"class":"beam",cx:pts[99][0],cy:pts[99][1],r:4},hs);
+  function sweep(){
+    if(reduce) return;
+    var start=null, dur=1800;
+    function step(ts){ if(start===null) start=ts; var p=Math.min(1,(ts-start)/dur); var k=Math.min(99,Math.floor(p*99.999)); beam.setAttribute("cx",pts[k][0]); beam.setAttribute("cy",pts[k][1]); halo.setAttribute("cx",pts[k][0]); halo.setAttribute("cy",pts[k][1]); if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  document.getElementById("replay").addEventListener("click",sweep);
+  sweep();
+})();
+
+/* ---------- Relay bench dashboard ---------- */
+var R = {
+  kind:"healthy", contact:false, ops:0, running:false,
+  info:{
+    healthy:{verdict:"Normal", rf:"Normal (78%)", lof:"normal", why:"All 11 indicators inside the normal range.", ok:true},
+    shorted:{verdict:"Fault: shorted turns", rf:"Shorted turns (100%)", lof:"anomaly", why:"Final current 63.6 mA (normal 33.8 to 46.4), resistance ratio 0.66, dip at 6.25 ms.", ok:false},
+    jammed:{verdict:"Fault: jammed mechanics", rf:"Jammed mechanics (74%)", lof:"normal", why:"Late dip at 16.5 ms (normal 6.75 to 15.25 ms).", ok:false},
+    welded:{verdict:"Fault: welded contact", rf:"Welded contact (100%)", lof:"anomaly", why:"No dip, and 70.4 mA still flows in the output after RESET.", ok:false},
+    open:{verdict:"Fault: open coil or bad connection", rf:"Open coil (100%)", lof:"anomaly", why:"Final coil current 0.0 mA: no current reaches the winding.", ok:false}
+  }
+};
+var rc = document.getElementById("r-chart");
+var C = {W:600,H:210,L:40,R:12,T:10,B:28,ymax:70};
+function cx(t){ return C.L + t/25*(C.W-C.L-C.R); }
+function cy(v){ return C.T + (1-v/C.ymax)*(C.H-C.T-C.B); }
+(function axes(){
+  var i;
+  for(i=0;i<=25;i+=5){ el("line",{"class":"g",x1:cx(i),x2:cx(i),y1:cy(0),y2:cy(C.ymax)},rc); txt("text",{"class":"tx",x:cx(i),y:C.H-10,"text-anchor":"middle"},i+" ms",rc); }
+  for(i=0;i<=C.ymax;i+=20){ el("line",{"class":"g",x1:cx(0),x2:cx(25),y1:cy(i),y2:cy(i)},rc); txt("text",{"class":"tx",x:cx(0)-6,y:cy(i)+4,"text-anchor":"end"},String(i),rc); }
+  el("line",{"class":"end",x1:cx(20),x2:cx(20),y1:cy(0),y2:cy(C.ymax)},rc);
+  txt("text",{"class":"tx",x:cx(20)-5,y:cy(C.ymax)+12,"text-anchor":"end"},"end of pulse",rc);
+})();
+var rPath = el("path",{"class":"c",d:"",stroke:"var(--d-set)"},rc);
+
+function makeCurve(kind, cmd){
+  var kp = KP[kind];
+  var dipT = null, shift = 0;
+  if(kind==="healthy" && cmd==="SET"){ var opts=[8.25,8.5,8.75,8.75,9.0,9.5,9.75]; dipT=opts[Math.floor(Math.random()*opts.length)]; shift=dipT-8.75; }
+  if(kind==="healthy" && cmd==="RESET"){ kp=KP.healthyReset; dipT=11.25+(Math.random()<.5?0:0.25); }
+  if(kind==="shorted") dipT=6.25;
+  if(kind==="jammed") dipT=16.5;
+  var out=[], bounce=[];
+  if(kind==="healthy"||kind==="shorted"){ var n=2+Math.floor(Math.random()*2); for(var b=0;b<n;b++){ bounce.push([(dipT||9)+0.5+Math.random()*2.2, 3+Math.random()*6]); } }
+  for(var i=0;i<100;i++){
+    var t=i*0.25, tt=t;
+    if(shift && t>=7.5 && t<=11.5){ tt=t-shift; }
+    var v=interp(kp,tt);
+    if(kind!=="open" && t<20.25) v+=noise(0.9);
+    for(var j=0;j<bounce.length;j++){ if(Math.abs(t-bounce[j][0])<0.13) v-=bounce[j][1]; }
+    if(kind==="open") v=Math.abs(noise(0.05));
+    v=Math.max(0,Math.round(v*10)/10);
+    out.push(v);
+  }
+  return {pts:out, dip:dipT};
+}
+function drawCycle(cmd){
+  var c = makeCurve(R.kind, cmd), d="", i, sum=0, cnt=0;
+  for(i=0;i<100;i++){ d+=(i?"L":"M")+cx(i*0.25).toFixed(1)+" "+cy(c.pts[i]).toFixed(1); if(i>=72 && i<80){ sum+=c.pts[i]; cnt++; } }
+  rPath.setAttribute("d",d);
+  rPath.setAttribute("stroke", cmd==="SET" ? "var(--d-set)" : "var(--d-reset)");
+  var info=R.info[R.kind];
+  if(R.kind!=="open"){ R.contact = (cmd==="SET"); }
+  if(R.kind==="welded"){ R.contact = true; }
+  var outI = R.contact ? (R.kind==="welded"?70.4:69.8+noise(0.2)) : 0;
+  document.getElementById("r-final").textContent = fmt(sum/cnt,1)+" mA";
+  document.getElementById("r-dip").textContent = c.dip ? fmt(c.dip,2)+" ms" : "no dip";
+  document.getElementById("r-contact").textContent = R.contact ? "closed" : "open";
+  document.getElementById("r-out").textContent = fmt(outI,1)+" mA";
+  var late = Math.random()<.8 ? 0 : 1;
+  document.getElementById("r-meta").textContent = cmd+", 100 points, one every 0.25 ms, "+late+(late===1?" late point":" late points");
+  var v=document.getElementById("r-verdict");
+  v.textContent=info.verdict; v.className="verdict "+(info.ok?"ok":"bad");
+  document.getElementById("r-rf").textContent=info.rf;
+  document.getElementById("r-lof").textContent=info.lof;
+  document.getElementById("r-why").textContent=info.why;
+}
+document.getElementById("r-set").addEventListener("click",function(){ R.ops++; document.getElementById("r-ops").textContent=R.ops.toLocaleString("en-US"); drawCycle("SET"); });
+document.getElementById("r-reset").addEventListener("click",function(){ R.ops++; document.getElementById("r-ops").textContent=R.ops.toLocaleString("en-US"); drawCycle("RESET"); });
+document.getElementById("r-kind").addEventListener("change",function(e){ R.kind=e.target.value; drawCycle("SET"); });
+
+var runBtn=document.getElementById("r-run"), timer=null;
+function setRunning(on){
+  R.running=on;
+  runBtn.textContent = on ? "Stop" : "Run 1,000 cycles";
+  runBtn.className = on ? "stop" : "";
+  document.getElementById("r-set").disabled=on; document.getElementById("r-reset").disabled=on; document.getElementById("r-kind").disabled=on;
+}
+runBtn.addEventListener("click",function(){
+  var sumEl=document.getElementById("r-sum");
+  if(R.running){ clearInterval(timer); setRunning(false); sumEl.hidden=false; sumEl.className="auto-sum bad"; sumEl.textContent="Stopped by the operator."; return; }
+  var total=1000, done=0, anom=0, consec=0, bad=!R.info[R.kind].ok;
+  sumEl.hidden=true; setRunning(true);
+  timer=setInterval(function(){
+    var step=reduce?100:8;
+    for(var k=0;k<step && done<total;k++){
+      done++; R.ops+=2;
+      if(bad){ anom++; consec++; } else if(Math.random()<0.0004){ anom++; consec=1; } else { consec=0; }
+      if(consec>=5) break;
+    }
+    if(done%40<step || consec>=5 || done>=total) drawCycle("SET");
+    document.getElementById("r-bar").style.width=(done/total*100)+"%";
+    document.getElementById("r-prog").textContent=done.toLocaleString("en-US")+" / 1,000";
+    document.getElementById("r-ops").textContent=R.ops.toLocaleString("en-US");
+    document.getElementById("r-anom").textContent=String(anom);
+    if(consec>=5){ clearInterval(timer); setRunning(false); sumEl.hidden=false; sumEl.className="auto-sum bad"; sumEl.textContent="Stopped after 5 anomalies in a row, at cycle "+done+". Check the relay."; }
+    else if(done>=total){ clearInterval(timer); setRunning(false); sumEl.hidden=false; sumEl.className="auto-sum"; sumEl.textContent="Test complete. First 10 and last 10 cycles compared on 5 indicators: all stable, no drift."; }
+  }, 30);
+});
+drawCycle("SET");
+
+/* ---------- LCD 1602 (5x7 dot matrix) ---------- */
+var G = {
+  " ":["00000","00000","00000","00000","00000","00000","00000"],
+  "A":["01110","10001","10001","11111","10001","10001","10001"],
+  "B":["11110","10001","10001","11110","10001","10001","11110"],
+  "C":["01110","10001","10000","10000","10000","10001","01110"],
+  "D":["11100","10010","10001","10001","10001","10010","11100"],
+  "E":["11111","10000","10000","11110","10000","10000","11111"],
+  "G":["01110","10001","10000","10111","10001","10001","01111"],
+  "H":["10001","10001","10001","11111","10001","10001","10001"],
+  "I":["01110","00100","00100","00100","00100","00100","01110"],
+  "K":["10001","10010","10100","11000","10100","10010","10001"],
+  "L":["10000","10000","10000","10000","10000","10000","11111"],
+  "M":["10001","11011","10101","10101","10001","10001","10001"],
+  "N":["10001","10001","11001","10101","10011","10001","10001"],
+  "O":["01110","10001","10001","10001","10001","10001","01110"],
+  "P":["11110","10001","10001","11110","10000","10000","10000"],
+  "R":["11110","10001","10001","11110","10100","10010","10001"],
+  "S":["01111","10000","10000","01110","00001","00001","11110"],
+  "T":["11111","00100","00100","00100","00100","00100","00100"],
+  "U":["10001","10001","10001","10001","10001","10001","01110"],
+  "Y":["10001","10001","10001","01010","00100","00100","00100"],
+  "0":["01110","10001","10011","10101","11001","10001","01110"],
+  "1":["00100","01100","00100","00100","00100","00100","01110"],
+  "2":["01110","10001","00001","00010","00100","01000","11111"],
+  "3":["11111","00010","00100","00010","00001","10001","01110"],
+  "4":["00010","00110","01010","10010","11111","00010","00010"],
+  "5":["11111","10000","11110","00001","00001","10001","01110"],
+  "6":["00110","01000","10000","11110","10001","10001","01110"],
+  "7":["11111","00001","00010","00100","01000","01000","01000"],
+  "8":["01110","10001","10001","01110","10001","10001","01110"],
+  "9":["01110","10001","10001","01111","00001","00010","01100"],
+  ":":["00000","01100","01100","00000","01100","01100","00000"],
+  ".":["00000","00000","00000","00000","00000","01100","01100"],
+  "/":["00000","00001","00010","00100","01000","10000","00000"],
+  "!":["00100","00100","00100","00100","00100","00000","00100"],
+  "h":["10000","10000","10110","11001","10001","10001","10001"],
+  "a":["00000","00000","01110","00001","01111","10001","01111"],
+  "s":["00000","00000","01110","10000","01110","00001","11110"]
+};
+var lcd=document.getElementById("lcd"), lctx=lcd.getContext("2d");
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function drawLCD(l1,l2){
+  var s=2, pitch=4*s, dot=3.3*s, cw=5*pitch, ch=8*pitch, gx=4*s, gy=6*s, m=8*s;
+  var bg=cssVar("--lcd-bg"), on=cssVar("--lcd-on"), off=cssVar("--lcd-off");
+  lctx.fillStyle=bg; lctx.fillRect(0,0,lcd.width,lcd.height);
+  var lines=[(l1+"                ").slice(0,16),(l2+"                ").slice(0,16)];
+  for(var r=0;r<2;r++){ for(var c=0;c<16;c++){
+    var g=G[lines[r][c]]||G[" "], ox=m+c*(cw+gx), oy=m+r*(ch+gy);
+    for(var yy=0;yy<8;yy++){ for(var xx=0;xx<5;xx++){
+      var lit = yy<7 && g[yy][xx]==="1";
+      lctx.fillStyle= lit?on:off; lctx.fillRect(ox+xx*pitch, oy+yy*pitch, dot, dot);
+    }}
+  }}
+}
+var S={light:1840, alarm:false, meas:false, sec:0, T:24.6, P:1012, done:false}, T0=Date.now();
+var stLog=document.getElementById("st-log");
+function stamp(){ var t=Math.floor((Date.now()-T0)/1000); var m=Math.floor(t/60), s=t%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
+function slog(msg, hi){ var li=document.createElement("li"); li.innerHTML='<time>'+stamp()+'</time><span'+(hi?' class="hi"':'')+'></span>'; li.lastChild.textContent=msg; stLog.insertBefore(li, stLog.firstChild); while(stLog.children.length>14) stLog.removeChild(stLog.lastChild); }
+function renderStation(){
+  var l1, l2;
+  if(S.meas){ l1="T:"+S.T.toFixed(1)+"C "+Math.round(S.P)+"hPa"; }
+  else if(S.done){ l1="T:"+S.T.toFixed(1)+"C "+Math.round(S.P)+"hPa"; }
+  else { l1="READY: PRESS BTN"; }
+  var lv=String(Math.round(S.light));
+  if(S.alarm){ l2="! LIGHT ALARM !"; }
+  else if(S.meas){ var p=S.sec+"/60s"; l2=("LDR:"+lv+"                ").slice(0,16-p.length)+p; }
+  else if(S.done){ l2=("LDR:"+lv+"                ").slice(0,12)+"DONE"; }
+  else { l2=("LDR:"+lv+"                ").slice(0,14)+"OK"; }
+  drawLCD(l1,l2);
+  document.getElementById("st-led").className="led"+(S.alarm?" on":"");
+  document.getElementById("st-buzz").className="buzz"+(S.alarm?" on":"");
+}
+document.getElementById("st-light").addEventListener("input",function(e){
+  S.light=+e.target.value; document.getElementById("st-light-v").textContent=String(S.light);
+  var a=S.light>2500;
+  if(a && !S.alarm) slog("ADC watchdog IRQ, high priority: light "+S.light+" above 2500, LED and buzzer on", true);
+  if(!a && S.alarm) slog("Light back under 2500, alarm cleared");
+  S.alarm=a; renderStation();
+});
+var stTimer=null;
+document.getElementById("st-btn").addEventListener("click",function(){
+  if(S.meas){ slog("Button ignored: a campaign is already running"); return; }
+  S.meas=true; S.done=false; S.sec=0;
+  slog("EXTI IRQ, medium priority: 60 s measurement campaign started");
+  renderStation();
+  stTimer=setInterval(function(){
+    S.sec++;
+    S.T=Math.max(10,Math.min(40,S.T+noise(0.12))); S.P=Math.max(990,Math.min(1030,S.P+noise(0.4)));
+    if(S.sec%15===0 && S.sec<60) slog("TIM3 tick: sample "+S.sec+"/60, "+S.T.toFixed(1)+" °C, "+S.P.toFixed(1)+" hPa");
+    if(S.sec>=60){ clearInterval(stTimer); S.meas=false; S.done=true; slog("Campaign done: 60 BMP180 samples, TIM3 stopped"); }
+    renderStation();
+  }, 200);
+});
+slog("System ready, waiting for the button");
+renderStation();
+
+/* ---------- Smart Bin app ---------- */
+var CATS=["Recyclable","Organic","Non-recyclable"];
+var BIN={lv:{"Recyclable":45,"Organic":72,"Non-recyclable":85}, comp:{"Recyclable":1,"Organic":2,"Non-recyclable":3}, steps:{"Recyclable":256,"Organic":512,"Non-recyclable":768},
+  week:{"Recyclable":23,"Organic":15,"Non-recyclable":9}, busy:false, items:[
+  {cls:"Recyclable", draw:"bottle"},{cls:"Recyclable", draw:"can"},{cls:"Recyclable", draw:"paper"},
+  {cls:"Organic", draw:"banana"},{cls:"Organic", draw:"apple"},
+  {cls:"Non-recyclable", draw:"bag"},{cls:"Non-recyclable", draw:"straw"}]};
+var cam=document.getElementById("b-cam");
+function drawCam(item, conf){
+  while(cam.firstChild) cam.removeChild(cam.firstChild);
+  el("rect",{x:0,y:0,width:120,height:90,fill:"var(--cam)"},cam);
+  el("rect",{x:0,y:62,width:120,height:28,fill:"var(--cam-2)"},cam);
+  var bx=40, by=18, bw=40, bh=52;
+  if(item.draw==="bottle"){ el("path",{d:"M55 18h10v8c6 3 8 7 8 12v30c0 2-1 3-3 3H50c-2 0-3-1-3-3V38c0-5 2-9 8-12z",fill:"var(--bin-soft)",stroke:"var(--steel)"},cam); bx=44;by=15;bw=32;bh=59; }
+  if(item.draw==="can"){ el("rect",{x:47,y:26,width:26,height:44,rx:4,fill:"var(--steel)"},cam); el("rect",{x:47,y:38,width:26,height:16,fill:"var(--crit)"},cam); bx=43;by=22;bw=34;bh=52; }
+  if(item.draw==="paper"){ el("path",{d:"M34 30l46-6 6 40-46 6z",fill:"var(--ph-soft)"},cam); for(var i=0;i<4;i++){ el("line",{x1:40,y1:38+i*7,x2:78,y2:33+i*7,stroke:"var(--ph-ink-2)","stroke-width":1.5},cam);} bx=31;by=21;bw=58;bh=52; }
+  if(item.draw==="banana"){ el("path",{d:"M36 40c10 22 36 26 50 10c-14 8-34 6-44-12z",fill:"var(--fruit)"},cam); el("path",{d:"M84 47l5-4",stroke:"var(--cam-3)","stroke-width":3},cam); bx=32;by=33;bw=60;bh=30; }
+  if(item.draw==="apple"){ el("circle",{cx:60,cy:48,r:15,fill:"var(--apple)"},cam); el("path",{d:"M60 33c1-5 4-7 8-7c-1 4-4 6-8 7z",fill:"var(--bin)"},cam); bx=42;by=24;bw=36;bh=42; }
+  if(item.draw==="bag"){ el("path",{d:"M42 34h36l6 34H36z",fill:"var(--ph-line)",opacity:.9},cam); el("path",{d:"M50 34c0-8 20-8 20 0",fill:"none",stroke:"var(--ph-line)","stroke-width":3},cam); bx=33;by=22;bw=54;bh=50; }
+  if(item.draw==="straw"){ el("rect",{x:30,y:48,width:60,height:5,rx:2,transform:"rotate(-18 60 50)",fill:"var(--safe-soft)"},cam); bx=28;by=34;bw=64;bh=30; }
+  var lab=item.cls.toLowerCase()+" "+conf.toFixed(2);
+  el("rect",{x:bx,y:by,width:bw,height:bh,fill:"none",stroke:"var(--d-set)","stroke-width":2},cam);
+  el("rect",{x:bx,y:by-11,width:Math.round(lab.length*5.3+8),height:11,fill:"var(--d-set)"},cam);
+  txt("text",{x:bx+3,y:by-3,fill:"var(--cam)","font-size":"8.5","font-weight":"700","font-family":"var(--body)"},lab,cam);
+}
+function setStatus(kind,label){ var st=document.getElementById("b-status"); st.className="pill "+kind; st.textContent=label; }
+function renderBin(){
+  var g=document.getElementById("b-gauges"); g.innerHTML="";
+  var full=[];
+  CATS.forEach(function(c){
+    var v=Math.min(100,Math.round(BIN.lv[c]));
+    var d=document.createElement("div"); d.className="gauge"+(v>80?" full":"");
+    d.innerHTML='<div class="row"><span></span><b></b></div><div class="track"><i></i></div>';
+    d.querySelector(".row span").textContent=c; d.querySelector(".row b").textContent=v+"%";
+    d.querySelector(".track i").style.width=v+"%"; g.appendChild(d);
+    if(v>80) full.push(c+" is "+v+"% full");
+  });
+  var al=document.getElementById("b-alert");
+  al.hidden=full.length===0; al.textContent=full.join(", ")+". Empty it soon.";
+  document.getElementById("b-empty").disabled = full.length===0 || BIN.busy;
+  document.getElementById("b-next").disabled = BIN.busy;
+  var bars=document.getElementById("b-bars"); bars.innerHTML="";
+  var mx=0; CATS.forEach(function(c){ mx=Math.max(mx,BIN.week[c]); });
+  CATS.forEach(function(c){ var row=document.createElement("div"); row.innerHTML='<span></span><span><i></i></span><span></span>'; row.children[0].textContent=c==="Non-recyclable"?"Non-rec.":c; row.children[1].firstChild.style.width=(BIN.week[c]/mx*100)+"%"; row.children[2].textContent=String(BIN.week[c]); bars.appendChild(row); });
+}
+document.getElementById("b-next").addEventListener("click",function(){
+  if(BIN.busy) return;
+  BIN.busy=true; setStatus("analyzing","Analyzing"); document.getElementById("b-tray").textContent="Item detected, camera capture"; renderBin();
+  setTimeout(function(){
+    var it=BIN.items[Math.floor(Math.random()*BIN.items.length)];
+    var low=Math.random()<0.12, conf= low ? 0.6+Math.random()*0.14 : 0.76+Math.random()*0.21;
+    drawCam(it, conf);
+    document.getElementById("b-cls").textContent=it.cls;
+    document.getElementById("b-conf").textContent=(conf*100).toFixed(1)+"%";
+    if(low){
+      document.getElementById("b-step").textContent="Below 75%: place the item again";
+      setStatus("standby","Standby"); document.getElementById("b-tray").textContent="Tray at rest, 0°";
+      BIN.busy=false; renderBin(); return;
+    }
+    document.getElementById("b-step").textContent="Compartment "+BIN.comp[it.cls]+", "+BIN.steps[it.cls]+" steps";
+    setStatus("open","Open"); document.getElementById("b-tray").textContent="Tray turned to compartment "+BIN.comp[it.cls];
+    BIN.lv[it.cls]=Math.min(100,BIN.lv[it.cls]+4+Math.random()*3); BIN.week[it.cls]++;
+    renderBin();
+    setTimeout(function(){ setStatus("standby","Standby"); document.getElementById("b-tray").textContent="Tray back at 0°"; BIN.busy=false; renderBin(); }, 1600);
+  }, 800);
+});
+document.getElementById("b-empty").addEventListener("click",function(){ CATS.forEach(function(c){ if(BIN.lv[c]>80) BIN.lv[c]=5; }); renderBin(); });
+drawCam(BIN.items[0],0.875); renderBin();
+
+/* ---------- Safety app ---------- */
+var sc=document.getElementById("s-cam");
+function drawRoom(showBoxes){
+  while(sc.firstChild) sc.removeChild(sc.firstChild);
+  el("rect",{x:0,y:0,width:280,height:180,fill:"var(--cam)"},sc);
+  el("rect",{x:0,y:0,width:280,height:96,fill:"var(--cam-2)"},sc);
+  el("rect",{x:16,y:22,width:70,height:44,rx:3,fill:"var(--cam-3)"},sc);
+  el("rect",{x:0,y:96,width:280,height:10,fill:"var(--cam-3)"},sc);
+  el("rect",{x:0,y:106,width:280,height:74,fill:"var(--cam-2)"},sc);
+  for(var i=0;i<4;i++) el("line",{x1:70*i+35,y1:110,x2:70*i+35,y2:176,stroke:"var(--cam-3)","stroke-width":2},sc);
+  el("rect",{x:150,y:70,width:76,height:26,rx:3,fill:"var(--cam-3)"},sc);
+  el("rect",{x:166,y:52,width:44,height:18,rx:4,fill:"var(--steel)"},sc);
+  el("path",{d:"M172 70c2-9 7-10 6-17 6 4 8 10 7 17zM186 70c1-10 6-12 5-19 7 5 9 12 8 19zM198 70c2-7 5-8 4-13 5 3 7 8 6 13z",fill:"var(--flame)"},sc);
+  el("path",{d:"M176 70c1-5 3-6 3-9 3 3 4 6 3 9zM190 70c1-6 3-7 3-11 4 3 5 7 4 11z",fill:"var(--flame-2)"},sc);
+  el("path",{d:"M40 98l46-8 3 4-46 7z",fill:"var(--steel)"},sc);
+  el("rect",{x:86,y:88,width:20,height:7,rx:2,transform:"rotate(-9 96 91)",fill:"var(--ph-ink)"},sc);
+  el("rect",{x:102,y:140,width:16,height:16,rx:2,fill:"var(--safe)"},sc);
+  el("rect",{x:120,y:146,width:14,height:14,rx:2,fill:"var(--bin)"},sc);
+  if(showBoxes){
+    el("rect",{"class":"bbox",x:160,y:44,width:56,height:30,stroke:"var(--crit)"},sc);
+    el("rect",{x:160,y:31,width:62,height:13,fill:"var(--crit)"},sc);
+    txt("text",{"class":"bbox-t",x:164,y:41,fill:"var(--ph-bg)"},"fire 0.91",sc);
+    el("rect",{"class":"bbox",x:34,y:82,width:78,height:24,stroke:"var(--d-amber)"},sc);
+    el("rect",{x:34,y:69,width:66,height:13,fill:"var(--d-amber)"},sc);
+    txt("text",{"class":"bbox-t",x:38,y:79,fill:"var(--cam)"},"knife 0.87",sc);
+  }
+}
+drawRoom(true);
+document.getElementById("s-scan").addEventListener("click",function(){
+  var b=this; b.disabled=true; b.textContent="Scanning"; drawRoom(false);
+  setTimeout(function(){ drawRoom(true); b.disabled=false; b.textContent="Scan the room again"; }, 900);
+});
+function tab(n){
+  document.getElementById("s-tab1").setAttribute("aria-selected", n===1?"true":"false");
+  document.getElementById("s-tab2").setAttribute("aria-selected", n===2?"true":"false");
+  document.getElementById("s-p1").hidden = n!==1;
+  document.getElementById("s-p2").hidden = n!==2;
+}
+document.getElementById("s-tab1").addEventListener("click",function(){ tab(1); });
+document.getElementById("s-tab2").addEventListener("click",function(){ tab(2); });
+document.getElementById("s-doc").addEventListener("click",function(){ document.getElementById("s-doc-msg").hidden=false; });
+
+/* ---------- Cooling jacket ---------- */
+var JK={amb:38};
+var LVL=["Off","Low","Medium","High"];
+function raw(amb){ return 30+0.45*(amb-25); }
+function level(t){ return t<31?0:t<33?1:t<35?2:3; }
+var jc=document.getElementById("jk-chart");
+var J={W:560,H:200,L:36,R:10,T:12,B:28};
+function jx(h){ return J.L+(h-6)/8*(J.W-J.L-J.R); }
+function jy(v){ return J.T+(1-(v-28)/12)*(J.H-J.T-J.B); }
+var shift=[[6,26],[7,29],[8,32],[9,35],[10,37],[11,39],[12,40],[13,40],[14,38]];
+function drawJK(){
+  while(jc.firstChild) jc.removeChild(jc.firstChild);
+  var i, h;
+  for(h=6;h<=14;h+=2){ el("line",{"class":"g",x1:jx(h),x2:jx(h),y1:jy(28),y2:jy(40)},jc); txt("text",{"class":"tx",x:jx(h),y:J.H-8,"text-anchor":"middle"},h+":00",jc); }
+  for(var v=28;v<=40;v+=4){ el("line",{"class":"g",x1:jx(6),x2:jx(14),y1:jy(v),y2:jy(v)},jc); txt("text",{"class":"tx",x:jx(6)-5,y:jy(v)+4,"text-anchor":"end"},String(v),jc); }
+  var d0="", d1="";
+  for(i=0;i<shift.length;i++){
+    var t0=raw(shift[i][1]), lv=level(t0), t1=t0-lv*1.1;
+    d0+=(i?"L":"M")+jx(shift[i][0]).toFixed(1)+" "+jy(Math.min(40,t0)).toFixed(1);
+    d1+=(i?"L":"M")+jx(shift[i][0]).toFixed(1)+" "+jy(Math.min(40,t1)).toFixed(1);
+    if(i<shift.length-1 && lv>0){ var h0=jx(shift[i][0]), h1=jx(shift[i+1][0]); var top=jy(28)-lv*7; el("rect",{"class":"cl",x:h0,y:top,width:h1-h0,height:jy(28)-top},jc); }
+  }
+  el("path",{"class":"t0",d:d0},jc); el("path",{"class":"t1",d:d1},jc);
+}
+function renderJK(){
+  var t0=raw(JK.amb), lv=level(t0), t1=t0-lv*1.1, hum=Math.max(20,Math.round(70-0.9*(JK.amb-25)));
+  document.getElementById("j-t").innerHTML=t1.toFixed(1)+"<small> °C</small>";
+  document.getElementById("j-h").innerHTML=hum+"<small> %</small>";
+  document.getElementById("j-l").textContent=LVL[lv];
+  var bars=document.getElementById("j-lvl").children; for(var i=0;i<3;i++) bars[i].className = i<lv ? "on" : "";
+  document.getElementById("j-amb-v").textContent=JK.amb+" °C";
+  var chip=document.getElementById("j-chip");
+  chip.className="chip "+(lv===3?"warn":"ok");
+  chip.lastChild.textContent = lv===3 ? "Cooling at maximum" : (lv===0 ? "Cooling idle" : "Auto cooling");
+}
+document.getElementById("j-amb").addEventListener("input",function(e){ JK.amb=+e.target.value; renderJK(); });
+drawJK(); renderJK();
+
+/* ---------- COFICAB tank (float switch, relay, MQTT) ---------- */
+var TK={level:73, pump:false, ok:true, hist:[], minute:8*60+42, mode:"auto", drop:65, rise:75, mark:70};
+(function seed(){ var l=74, p=false, ok=true; for(var i=0;i<48;i++){ if(p){ l+=2.0; } else { l-=0.6; } if(ok && l<TK.drop){ ok=false; p=true; } else if(!ok && l>TK.rise){ ok=true; p=false; } TK.hist.push({ok:ok,pump:p}); } TK.level=l; TK.pump=p; TK.ok=ok; })();
+var tlog=document.getElementById("t-log");
+function hhmm(m){ var h=Math.floor(m/60)%24, mm=m%60; return String(h).padStart(2,"0")+":"+String(mm).padStart(2,"0"); }
+function tl(msg){ var li=document.createElement("li"); li.innerHTML="<time></time><span></span>"; li.firstChild.textContent=hhmm(TK.minute); li.lastChild.textContent=msg; tlog.insertBefore(li,tlog.firstChild); while(tlog.children.length>3) tlog.removeChild(tlog.lastChild); }
+var sp=document.getElementById("spark");
+function lvY(v){ return 14+176*(1-v/100); }
+function renderTank(){
+  var wl=TK.level/100*176;
+  var w=document.getElementById("t-water"); w.setAttribute("y",(190-wl).toFixed(1)); w.setAttribute("height",wl.toFixed(1));
+  var fy=lvY(Math.max(TK.drop,Math.min(TK.rise,TK.level)));
+  document.getElementById("t-float").setAttribute("y",(fy-6).toFixed(1));
+  document.getElementById("t-stem").setAttribute("y2",fy.toFixed(1));
+  var lv=document.getElementById("t-level"); lv.textContent=TK.ok?"Level OK":"Level low"; lv.style.color=TK.ok?"var(--ink)":"var(--warn)";
+  var chip=document.getElementById("t-pump-chip"); chip.className="chip "+(TK.pump?"ok":"idle"); chip.lastChild.textContent=(TK.pump?"Pump on":"Pump off")+(TK.mode==="auto"?", automatic":", remote");
+  ["t-auto","t-on","t-off"].forEach(function(id){ var on=(id==="t-auto"&&TK.mode==="auto")||(id==="t-on"&&TK.mode==="manual"&&TK.pump)||(id==="t-off"&&TK.mode==="manual"&&!TK.pump); document.getElementById(id).setAttribute("aria-pressed",on?"true":"false"); });
+  document.getElementById("t-pumpc").setAttribute("class","pump"+(TK.pump?" on":""));
+  while(sp.firstChild) sp.removeChild(sp.firstChild);
+  var n=TK.hist.length, bw=232/n, x0=26, i, d="";
+  txt("text",{"class":"lbl",x:0,y:15},"float",sp); txt("text",{"class":"lbl",x:0,y:52},"pump",sp);
+  for(i=0;i<n;i++){
+    var y=TK.hist[i].ok?8:24, x=x0+i*bw;
+    d+=(i?"L"+x.toFixed(1)+" "+y:"M"+x.toFixed(1)+" "+y)+"L"+(x+bw).toFixed(1)+" "+y;
+    if(TK.hist[i].pump) el("rect",{"class":"run",x:x.toFixed(1),y:42,width:(bw+0.3).toFixed(1),height:14},sp);
+  }
+  el("line",{"class":"lim",x1:x0,x2:258,y1:56,y2:56},sp);
+  el("path",{"class":"line",d:d},sp);
+}
+function tickTank(){
+  TK.minute++;
+  TK.level += TK.pump ? 2.0+noise(0.2) : -(0.6+noise(0.15));
+  TK.level=Math.max(0,Math.min(100,TK.level));
+  if(TK.ok && TK.level<TK.drop){ TK.ok=false; if(TK.mode==="auto"){ TK.pump=true; tl("Float low: pump started, alert sent to operators"); } else { tl("Float low: alert sent to operators"); } }
+  else if(!TK.ok && TK.level>TK.rise){ TK.ok=true; if(TK.mode==="auto"){ TK.pump=false; tl("Float back up: pump stopped"); } else { tl("Float back up: level OK"); } }
+  TK.hist.push({ok:TK.ok,pump:TK.pump}); if(TK.hist.length>48) TK.hist.shift();
+  renderTank();
+}
+TK.minute-=30; tl("Float low: pump started, alert sent to operators"); TK.minute+=6; tl("Float back up: pump stopped"); TK.minute+=24;
+renderTank();
+document.getElementById("t-auto").addEventListener("click",function(){ if(TK.mode!=="auto"){ TK.mode="auto"; TK.pump=!TK.ok; tl("Back to automatic control"); } renderTank(); });
+document.getElementById("t-on").addEventListener("click",function(){ TK.mode="manual"; if(!TK.pump){ TK.pump=true; tl("Pump started remotely from the dashboard (MQTT command)"); } renderTank(); });
+document.getElementById("t-off").addEventListener("click",function(){ TK.mode="manual"; if(TK.pump){ TK.pump=false; tl("Pump stopped remotely from the dashboard (MQTT command)"); } renderTank(); });
+var tkTimer=null;
+if("IntersectionObserver" in window){
+  new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ if(!tkTimer) tkTimer=setInterval(tickTank, 900); } else if(tkTimer){ clearInterval(tkTimer); tkTimer=null; } }); },{threshold:.2}).observe(document.getElementById("tank"));
+}
+
+/* ---------- Copy email ---------- */
+document.getElementById("copy").addEventListener("click",function(){
+  var m=document.getElementById("mail").textContent, msg=document.getElementById("copy-msg");
+  function sel(){ var r=document.createRange(); r.selectNodeContents(document.getElementById("mail")); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent="Selected. Press Ctrl+C or Cmd+C to copy."; }
+  try{ navigator.clipboard.writeText(m).then(function(){ msg.textContent="Email copied."; }, sel); }catch(e){ sel(); }
+});
+})();
+</script>
+
+</body>
+</html>
